@@ -1,5 +1,6 @@
 import requests
 import logging
+import time
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,6 +23,9 @@ def fetch_names(query, version='v1'):
             if len(names) < DEFAULT_LIMIT:
                 break
             offset += DEFAULT_LIMIT
+        elif response.status_code == 429:
+            logging.warning(f"Rate limited for version {version}. Waiting 10 seconds.")
+            time.sleep(10)
         else:
             logging.error(f"Failed to fetch names for {query} in version {version} at offset {offset}")
             break
