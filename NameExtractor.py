@@ -12,11 +12,27 @@ DEFAULT_LIMIT = 100
 names_set = set()
 work_queue = Queue()
 
-def fetch_names(query, version):
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_exhausted = False
+
+tries = {'v1': TrieNode(), 'v2': TrieNode(), 'v3': TrieNode()}
+
+def process_prefix(prefix, version):
+    trie_root = tries[version]
+    current = trie_root
+    for char in prefix:
+        if char not in current.children:
+            current.children[char] = TrieNode()
+        current = current.children[char]
+    if current.is_exhausted:
+        return
+
     endpoint = f"/{version}/autocomplete"
     offset = 0
     while True:
-        params = {'query': query, 'limit': DEFAULT_LIMIT, 'offset': offset}
+        params = {'query': prefix, 'limit': DEFAULT_LIMIT, 'offset': offset}
         response = requests.get(f"{BASE_URL}{endpoint}", params=params)
         if response.status_code == 200:
             data = response.json()
@@ -24,13 +40,15 @@ def fetch_names(query, version):
             names_set.update(names)
             logging.info(f"Response: {data}")
             if len(names) < DEFAULT_LIMIT:
+                current.is_exhausted = True
                 break
             offset += DEFAULT_LIMIT
             if len(names) == DEFAULT_LIMIT:
                 for name in names:
-                    if len(name) > len(query):
-                        next_char = name[len(query)].lower()
-                        work_queue.put((query + next_char, version))
+                    if len(name) > len(prefix):
+                        next_char = name[len(prefix)].lower()
+                        if next_char not in current.children:
+                            work_queue.put((prefix + next_char, version))
         elif response.status_code == 429:
             time.sleep(10)
         else:
@@ -41,8 +59,8 @@ def worker():
         item = work_queue.get()
         if item is None:
             break
-        query, version = item
-        fetch_names(query, version)
+        prefix, version = item
+        process_prefix(prefix, version)
         work_queue.task_done()
 
 threads = [Thread(target=worker) for _ in range(5)]
