@@ -26,6 +26,11 @@ def fetch_names(query, version):
             if len(names) < DEFAULT_LIMIT:
                 break
             offset += DEFAULT_LIMIT
+            if len(names) == DEFAULT_LIMIT:
+                for name in names:
+                    if len(name) > len(query):
+                        next_char = name[len(query)].lower()
+                        work_queue.put((query + next_char, version))
         elif response.status_code == 429:
             time.sleep(10)
         else:
