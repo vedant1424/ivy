@@ -21,6 +21,27 @@ Hey there! This is my little project to wrangle every possible name out of an au
   - Repeated names (the social butterflies of the name world).
 - **Output**: Dumps names into neat files: `names_v1.txt`, `names_v2.txt`, `names_v3.txt`.
 
+### output
+-INFO:root:
+ Detailed Report:
+ V1:
+  Names Collected: 260
+  API Calls: 40
+ V2:
+  Names Collected: 432
+  API Calls: 40
+ V3:
+  Names Collected: 540
+  API Calls: 40
+
+ Total Names Collected (sum): 1232
+ Total API Calls: 120
+ Total Unique Names: 1231
+ Names in Exactly One Version: 1230
+ Names in Exactly Two Versions: 1
+ Names in All Three Versions: 0
+ Repeated Names (in more than one version): 1
+ 
 Challenges and Learnings
 Initial Testing: Oh man, the first test was a riot! I hit "run," sat back with popcorn, and… zilch. Nada. Dead silence. Turns out the API had been updated, and I was basically knocking on a ghost town’s door.  😂 
 Prefix Coverage: Missed some names at first because I forgot digits. Added them to the mix, and boom—full coverage.
