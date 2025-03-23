@@ -2,9 +2,6 @@
 
 ## Author: Vedant
 
-### Introduction
-Hey there! This is my little project to wrangle every possible name out of an autocomplete API at `http://35.200.185.69:8000`. It’s got three versions—`v1`, `v2`, and `v3`—each spitting out its own quirky set of names. My mission? Grab them all, dodge rate limits like a pro, and dish out some cool stats about unique and repeated names across the versions.
-
 ### Approach
 - **Prefix Exploration**: I used a trie (fancy tree thing) to dig through prefixes. It starts with single characters—like letters, numbers, even a dash or two—and keeps building longer prefixes when the API maxes out at 100 names.
 - **Concurrency**: I’ve got 5 threads running wild (but controlled!) to chew through prefixes fast while keeping the API happy.
