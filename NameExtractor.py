@@ -120,7 +120,9 @@ def main():
 
     # Queue initial prefixes for each version
     versions = ['v1', 'v2', 'v3']
-    initial_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -+.'
+    #using a modified version of initial_char used from uniquechars.py that uses the known chars from previous testing to minimize the number 0f api calls. 
+    # for all the chars use -> abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -+.
+    initial_chars = '0 .rm134cx+uv-8gq2lpdeh6ijk9tazyw75nfosb'
     for version in versions:
         for char in initial_chars:
             work_queue.put((char, version))
@@ -146,8 +148,7 @@ def main():
     total_unique = len(name_versions)
     names_in_one = sum(1 for v in name_versions.values() if len(v) == 1)
     names_in_two = sum(1 for v in name_versions.values() if len(v) == 2)
-    names_in_three = sum(1 for v in name_versions.values() if len(v) == 3)
-    repeated_names = names_in_two + names_in_three
+    
 
     # Save names to version-specific files
     for version in versions:
@@ -168,8 +169,6 @@ def main():
     report += f"Total Unique Names: {total_unique}\n"
     report += f"Names in Exactly One Version: {names_in_one}\n"
     report += f"Names in Exactly Two Versions: {names_in_two}\n"
-    report += f"Names in All Three Versions: {names_in_three}\n"
-    report += f"Repeated Names (in more than one version): {repeated_names}\n"
     logging.info(report)
 
 if __name__ == "__main__":
